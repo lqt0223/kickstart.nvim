@@ -626,13 +626,38 @@ require('lazy').setup({
 
       require('mason-lspconfig').setup {
         handlers = {
+          -- fix vue lsp (remember to launch neovim in node.js >= 18)
           function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            if (server_name == 'tsserver' or server_name == 'volar') then
+              -- If you are using mason.nvim, you can get the ts_plugin_path like this
+              local mason_registry = require('mason-registry')
+              local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
+
+              local lspconfig = require('lspconfig')
+
+              lspconfig.tsserver.setup {
+                init_options = {
+                  plugins = {
+                    {
+                      name = '@vue/typescript-plugin',
+                      location = vue_language_server_path,
+                      languages = { 'vue' },
+                    },
+                  },
+                },
+                filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+              }
+
+              -- No need to set `hybridMode` to `true` as it's the default value
+              lspconfig.volar.setup {}
+            else
+              local server = servers[server_name] or {}
+              -- This handles overriding only values explicitly passed
+              -- by the server configuration above. Useful when disabling
+              -- certain features of an LSP (for example, turning off formatting for tsserver)
+              server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+              require('lspconfig')[server_name].setup(server)
+            end
           end,
         },
       }
