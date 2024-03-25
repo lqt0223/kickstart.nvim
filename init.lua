@@ -327,6 +327,16 @@ require('lazy').setup({
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
 
+  {
+    'ethanholz/nvim-lastplace',
+    config = function()
+      require'nvim-lastplace'.setup {
+          lastplace_ignore_buftype = {"quickfix", "nofile", "help"},
+          lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit"},
+          lastplace_open_folds = true
+      }
+    end
+  },
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -780,8 +790,16 @@ require('lazy').setup({
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
+    dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
     config = function()
-      require('mini.comment').setup { }
+      require('mini.comment').setup {
+         hooks = {
+            -- for vue-like mixed-language file
+            pre = function()
+              require('ts_context_commentstring.internal').update_commentstring()
+            end,
+        },
+      }
       -- Better Around/Inside textobjects
       --
       -- Examples:
