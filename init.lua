@@ -384,19 +384,17 @@ require('lazy').setup({
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
 
-      -- create_buffer if not exist (todo create directory only)
+      -- create_buffer if not exist
       local actions = require'telescope.actions'
       local action_state = require'telescope.actions.state'
       local Path = require'plenary.path'
-      local create_buffer = function(prompt_bufnr)
+
+      local create_file = function(prompt_bufnr)
         local prompt = action_state.get_current_line()
         local prompt_path = Path:new(prompt)
 
-        if prompt:match("/$") then
-          prompt_path:mkdir({ parents = true, exists_ok = false })
-        else
-          prompt_path:touch({ parents = true })
-        end
+        local prompt_path_parent = prompt_path:parent()
+        prompt_path_parent:mkdir({ parents = true, exists_ok = true })
         actions.close(prompt_bufnr)
         vim.cmd.tabedit(prompt_path:absolute())
       end
@@ -406,7 +404,7 @@ require('lazy').setup({
         --
         defaults = {
           mappings = {
-            i = { ['<C-y>'] = create_buffer },
+            i = { ['<C-y>'] = create_file },
           },
         },
         -- pickers = {}
