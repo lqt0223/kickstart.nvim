@@ -100,10 +100,9 @@ vim.g.have_nerd_font = true
 
 -- Make line numbers default
 vim.opt.number = true
-vim.opt.relativenumber = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -135,16 +134,9 @@ vim.opt.updatetime = 250
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
 vim.opt.timeoutlen = 300
-
--- Configure how new splits should be opened
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-
--- Sets how neovim will display certain whitespace characters in the editor.
---  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '» ', lead = '⋅', trail = '⋅', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -641,7 +633,7 @@ require('lazy').setup({
 
       require('mason-lspconfig').setup {
         handlers = {
-          -- fix vue lsp (remember to launch neovim in node.js >= 18)
+          -- fix vue lsp (remember to launch neovim in node.js >= 16)
           function(server_name)
             if (server_name == 'tsserver' or server_name == 'volar') then
               -- If you are using mason.nvim, you can get the ts_plugin_path like this
@@ -819,11 +811,11 @@ require('lazy').setup({
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'navarasu/onedark.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
-    opts = {
-      style = "light"
-    },
+    -- opts = {
+    --   style = "light"
+    -- },
     init = function()
-      vim.opt.background = "light"
+      -- vim.opt.background = "light"
       require("onedark").load()
     end,
   },
