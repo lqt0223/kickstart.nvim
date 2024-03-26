@@ -153,7 +153,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 0
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -383,15 +383,32 @@ require('lazy').setup({
 
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
+
+      -- create_buffer if not exist (todo create directory only)
+      local actions = require'telescope.actions'
+      local action_state = require'telescope.actions.state'
+      local Path = require'plenary.path'
+      local create_buffer = function(prompt_bufnr)
+        local prompt = action_state.get_current_line()
+        local prompt_path = Path:new(prompt)
+
+        if prompt:match("/$") then
+          prompt_path:mkdir({ parents = true, exists_ok = false })
+        else
+          prompt_path:touch({ parents = true })
+        end
+        actions.close(prompt_bufnr)
+        vim.cmd.tabedit(prompt_path:absolute())
+      end
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          mappings = {
+            i = { ['<C-y>'] = create_buffer },
+          },
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
