@@ -246,6 +246,7 @@ require('lazy').setup({
     opts = {
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
+        gs.toggle_current_line_blame()
 
         local function map(mode, l, r, opts)
           opts = opts or {}
