@@ -396,6 +396,13 @@ require('lazy').setup({
         --  All the info you're looking for is in `:help telescope.setup()`
         --
         defaults = {
+          path_display = { "tail" },
+          layout_config = {
+            horizontal = {
+              preview_width = 80
+            }
+          },
+          dynamic_preview_title = true,
           mappings = {
             i = { ['<C-y>'] = create_file },
           },
