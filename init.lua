@@ -952,5 +952,39 @@ require('lazy').setup({
   },
 })
 
+-- Function to convert a decimal number to hexadecimal
+local function decimal_to_hex(decimal)
+  if type(decimal) ~= "number" then
+    return nil, "Input must be a number"
+  end
+  return string.format("%x", decimal)
+end
+
+-- Function to perform in-place replacement
+local function replace_decimal_with_hex()
+  -- Get the current word under the cursor
+  local current_word = vim.fn.expand("<cword>")
+  local decimal_number = tonumber(current_word)
+  
+  -- Check if it's a valid number
+  if not decimal_number then
+    vim.api.nvim_out_write("No valid decimal number under cursor.\n")
+    return
+  end
+  
+  -- Convert to hexadecimal
+  local hex_value = decimal_to_hex(decimal_number)
+  
+  -- Replace the current word with the hexadecimal value
+  vim.cmd("normal! ciw" .. hex_value)
+end
+
+-- Bind the function to a key mapping
+vim.keymap.set({'n', 'i'}, '<leader>xh', replace_decimal_with_hex, { noremap = true, silent = true })
+
+-- Example usage:
+-- Place the cursor on a decimal number in normal mode and press <leader>xh
+
+--
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
