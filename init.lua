@@ -829,10 +829,10 @@ require('lazy').setup({
     'navarasu/onedark.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     opts = {
-      style = "light"
+      style = "dark"
     },
     init = function()
-      vim.opt.background = "light"
+      vim.opt.background = "dark"
       require("onedark").load()
     end,
   },
