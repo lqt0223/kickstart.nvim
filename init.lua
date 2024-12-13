@@ -426,7 +426,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', function()
-        local status = pcall(builtin.git_files, { show_untracked = true })
+        local status = pcall(builtin.git_files, { show_untracked = true, use_git_root = false })
         -- git_files and fall back to find_files
         if not status then
           builtin.find_files()
